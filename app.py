@@ -3,11 +3,16 @@ from enum import Enum
 
 # Load contacts from JSON file
 def load_contacts():
-    with open('contacts.json', 'r') as file:
-        return json.load(file)
+    try:
+        with open('contacts.json', 'r') as file:
+            return json.load(file)
+    except :
+        contacts = []
+        save_contacts(contacts)
+        return contacts
 
 # Save contacts to JSON file
-def save_contacts():
+def save_contacts(contacts):
     with open('contacts.json', 'w') as file:
         json.dump(contacts, file, indent=4)
 
@@ -31,7 +36,7 @@ def menu():
 # Function to add a new contact
 def add():
     contacts.append({'fName': input("Your name? "), 'email': input("Your email? ")})
-    save_contacts()
+    
 
 # Function to print all contacts
 def print_contacts():
@@ -42,14 +47,14 @@ def print_contacts():
 def upd_contact():
     victim = find_contact()
     contacts[victim] = {'fName': input("New name? "), 'email': input("New email? ")}
-    save_contacts()
+    
 
 # Function to delete a contact
 def del_contact():
     victim = find_contact()
     print(f'{contacts[victim]} is kaput')
     contacts.pop(victim)
-    save_contacts()
+    
 
 # Function to find a contact by index
 def find_contact():
@@ -62,6 +67,7 @@ if __name__ == "__main__":
     while True:
         user_selection = menu()
         if user_selection == Actions.EXIT:
+            save_contacts(contacts)
             exit()
         elif user_selection == Actions.ADD:
             add()
